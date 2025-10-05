@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.login {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2f3d59;
+}
+
+.login__container {
+  background: #d5d5d5;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  margin-top: 10px;
+}
+
+.login__title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.login__subtitle {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.login__field {
+  text-align: left;
+}
+
+.login__label {
+  font-size: 0.9rem;
+  color: #444;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.login__input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border 0.2s ease;
+}
+
+.login__input:focus {
+  border-color: #2575fc;
+  outline: none;
+}
+
+.login__password-wrapper {
+  position: relative;
+}
+
+.login__toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #2575fc;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.login__options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.login__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #555;
+}
+
+.login__link {
+  color: #2575fc;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login__link:hover {
+  color: #6a11cb;
+}
+
+.login__button {
+  padding: 0.9rem;
+  background: #2575fc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login__button:hover:not(:disabled) {
+  background: #1a5fd6;
+}
+
+.login__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login__footer {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
