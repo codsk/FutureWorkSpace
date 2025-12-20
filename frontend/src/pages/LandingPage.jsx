@@ -77,7 +77,7 @@ const LandingPage = () => {
       {/* Header */}
       <header className="landing-page__header">
         <div className="landing-page__header__left">
-          <div className="landing-page__header__left--logo">InfySpaces</div>
+          <div className="landing-page__header__left--logo">FutureSpaces</div>
           {selectedCity && (
             <div className="landing-page__header__left--selected-city">
               <p onClick={() => setShowModal(true)}>{selectedCity}</p>
@@ -89,7 +89,9 @@ const LandingPage = () => {
             <Link to="/" className="landing-page__header__right--links--link">Browse Spaces</Link>
             <Link to="/register" className="landing-page__header__right--links--link">Become a Host</Link>
             <Link to="/about" className="landing-page__header__right--links--link">About</Link>
-            <Link to="/login" className="landing-page__header__right--links--link">LogIn</Link>
+            {sessionStorage.getItem('isLogin')?
+            <Link to="/login" className="landing-page__header__right--links--link">Logout</Link>
+            :<Link to="/login" className="landing-page__header__right--links--link">Login</Link>}
             <Link to="/register" className="landing-page__header__right--links--link">SignUp</Link>
           </div>
         </div>
@@ -133,7 +135,7 @@ const LandingPage = () => {
             <Link to="/listings" className="landing-page__card-section__container--header--view-all">View All →</Link>
           </div>
           <div className="landing-page__card-section__container__cards">
-            {propertyData.map((property) => (
+            {propertyData && propertyData.map((property) => (
               <div key={property._id} className="landing-page__card-section__container__cards--card">
                 {property?.image ? (
                   <>
@@ -180,7 +182,7 @@ const LandingPage = () => {
       <footer className="landing-page__footer">
         <div className="landing-page__footer__container">
           <div className="landing-page__footer--section">
-            <div className="landing-page__footer__container--section-logo">InfySpaces</div>
+            <div className="landing-page__footer__container--section-logo">FutureSpaces</div>
             <p>Find and book the perfect workspace for your needs.</p>
           </div>
           <div className="landing-page__footer__container--section">
@@ -203,7 +205,7 @@ const LandingPage = () => {
           </div>
         </div>
         <div className="landing-page__footer__bottom">
-          <p>© 2025 InfySpaces. All rights reserved.</p>
+          <p>© 2025 FutureSpaces. All rights reserved.</p>
         </div>
       </footer>
     </div>

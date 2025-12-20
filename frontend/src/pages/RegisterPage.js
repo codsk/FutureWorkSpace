@@ -62,7 +62,7 @@ const RegisterPage = () => {
         alert('Registration successful! Redirecting to dashboard...');
         sessionStorage.setItem('token', res.data.token);
         sessionStorage.setItem('user', JSON.stringify(res.data.user));
-        window.location.href = '/dashboard';
+        window.location.href = '/';
         return;
       }
     }catch(error){
@@ -80,7 +80,7 @@ const RegisterPage = () => {
         <div className="register__card">
           <h2 className="register__title">Create your account</h2>
           <p className="register__subtitle">
-            Join InfySpaces and start booking amazing workspaces
+            Join FutureSpaces and start booking amazing workspaces
           </p>
 
           <form onSubmit={handleSubmit} className="register__form">

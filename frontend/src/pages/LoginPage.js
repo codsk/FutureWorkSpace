@@ -41,7 +41,7 @@ const LoginPage = () => {
         if(res.data.user.role === 'admin'){
           window.location.href =  '/admin';
         }else if(res.data.user.role === 'client'){
-          window.location.href =  '/host';
+          window.location.href =  '/';
         }else{
           window.location.href =  '/hostDashboard';
         }

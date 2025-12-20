@@ -5,9 +5,10 @@ import AddSpaceDetailsForm from "./addSpaceDetailsForm";
 const AddSpaceDetails = () => {
   const location = useLocation();
   const propertyId = location.state;
-  const [spaces,setSpaces] = useState();
+  const [spaces,setSpaces] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [propertyData, setPropertyData] = useState(null);
+  const [carouselIndices, setCarouselIndices] = useState({});
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => {setShowModal(false); setPropertyData(null);}
@@ -16,7 +17,7 @@ const AddSpaceDetails = () => {
   try {
     const response = await fetch(`http://localhost:5000/api/space/getSpaces/${propertyId}`);
     const data = await response.json();
-
+    debugger;
     if (data.spaces && data.spaces._doc && Array.isArray(data.spaces._doc.spaces)) {
       setSpaces(data.spaces._doc.spaces);
     } else {
@@ -113,7 +114,34 @@ const AddSpaceDetails = () => {
 
   useEffect(()=>{
     getSpacesData();
-  },[])
+  },[]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (spaces && spaces.length > 0) {
+        setCarouselIndices((prevIndices) => {
+          return spaces.reduce((acc, space) => {
+            if (space.images.length > 0) {
+              acc[space._id] = (prevIndices[space._id] + 1) % space.images.length;
+            }
+            return acc;
+          }, {});
+        });
+      }
+    }, 3000); 
+
+    return () => clearInterval(interval);
+  }, [spaces]);
+
+  const handleCarouselChange = (spaceId, direction) => {
+    setCarouselIndices((prevIndices) => {
+      const currentIndex = prevIndices[spaceId];
+      const newIndex =
+        (currentIndex + direction + spaces.find((place) => place._id === spaceId).images.length) %
+        spaces.find((space) => space._id === spaceId).images.length;
+      return { ...prevIndices, [spaceId]: newIndex };
+    });
+  };  
 
   return(
     <>
@@ -129,7 +157,35 @@ const AddSpaceDetails = () => {
           <div className="space__content__cards">
             {spaces?.map(space => (
               <div key={space._id} className="space-card">
-                
+                {space.images && space.images.length > 0 ? (
+                  <>
+                    <img
+                      src={`http://localhost:5000/${space.images[carouselIndices[space._id]]?.path}`}
+                      alt={space.name} 
+                      className="hostDashboard__content__cards--card--property-image"
+                    />
+                    <div className="hostDashboard__content__cards--card__carousel-controls">
+                      <button 
+                        className="hostDashboard__content__cards--card__carousel-controls--carousel-button prev"
+                        onClick={() => handleCarouselChange(space._id, -1)} // Decrease index (previous)
+                      >
+                        &#8592; 
+                      </button>
+                      <button 
+                        className="hostDashboard__content__cards--card__carousel-controls--carousel-button next"
+                        onClick={() => handleCarouselChange(space._id, 1)} // Increase index (next)
+                      >
+                        &#8594; 
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <img 
+                    src="https://via.placeholder.com/200"
+                    alt="No image available"
+                    className="hostDashboard__content__cards--card--property-image" 
+                  />
+                )}
                 <h3>{space.spaceType} - {space.roomNumber}</h3>
                 <p><strong>Floor:</strong> {space.floor}</p>
                 <p><strong>Capacity:</strong> {space.capacity}</p>
