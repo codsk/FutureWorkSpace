@@ -52,25 +52,18 @@ spaceRouter.get('/getSpaces/:propertyId', async (req, res) => {
   const { propertyId } = req.params;
 
   try {
-    const spaceDoc = await space.findOne({ id: propertyId });
+    // Return a plain object; each space already stores image.path as
+    // 'uploads/spaceImages/<savedFilename>' so the frontend can build the URL
+    // with `http://localhost:5000/${img.path}`.
+    const spaceDoc = await space.findOne({ id: propertyId }).lean();
 
     if (!spaceDoc) {
       return res.status(404).json({ message: 'No spaces found for this property' });
     }
-    const imageBaseUrl = process.env.NODE_ENV === 'production'? 'https://your-production-url.com/uploads/'
-      : 'http://localhost:5000/uploads/';
-    
-    const spaceWithImageUrls = {
-      ...spaceDoc,
-      images: spaceDoc?.spaces.images?.map(img => ({
-        ...img,
-        path: `${imageBaseUrl}spaceImages/${img.filename}`
-      }))
-    }
 
     res.status(200).json({
       message: "All spaces fetched successfully",
-      spaces: spaceWithImageUrls
+      spaces: spaceDoc
     });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });

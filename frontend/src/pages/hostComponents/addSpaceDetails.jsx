@@ -18,10 +18,26 @@ const AddSpaceDetails = () => {
     const response = await fetch(`http://localhost:5000/api/space/getSpaces/${propertyId}`);
     const data = await response.json();
     debugger;
-    if (data.spaces && data.spaces._doc && Array.isArray(data.spaces._doc.spaces)) {
-      setSpaces(data.spaces._doc.spaces);
+    // Support both shapes: older mongoose document (with _doc.spaces)
+    // and plain object returned via .lean() (spaces.spaces).
+    if (data.spaces) {
+      const spacesArray = Array.isArray(data.spaces.spaces)
+        ? data.spaces.spaces
+        : (data.spaces._doc && Array.isArray(data.spaces._doc.spaces) ? data.spaces._doc.spaces : null);
+
+      if (Array.isArray(spacesArray)) {
+        setSpaces(spacesArray);
+        // initialize carousel indices for each space so rendering has a safe index
+        const initialIndices = spacesArray.reduce((acc, sp) => {
+          acc[sp._id] = 0;
+          return acc;
+        }, {});
+        setCarouselIndices(initialIndices);
+      } else {
+        console.log('No valid spaces array found in the response.', data);
+      }
     } else {
-      console.log('No valid spaces array found in the response.');
+      console.log('No spaces key in response', data);
     }
   } catch (error) {
     console.error('Error fetching spaces:', error);
@@ -90,7 +106,9 @@ const AddSpaceDetails = () => {
   console.log(form);
     fetch(`http://localhost:5000/api/space/addSpace/${propertyId}`, {
       method: "POST",
-      body: form
+      body: form,
+      // Do NOT set the Content-Type header for multipart/form-data —
+      // let the browser set the boundary automatically.
     })
     .then(res => res.json())
     .then(data => {
@@ -160,8 +178,8 @@ const AddSpaceDetails = () => {
                 {space.images && space.images.length > 0 ? (
                   <>
                     <img
-                      src={`http://localhost:5000/${space.images[carouselIndices[space._id]]?.path}`}
-                      alt={space.name} 
+                      src={`http://localhost:5000/${space.images[(carouselIndices[space._id] ?? 0)]?.path}`}
+                      alt={space.name}
                       className="hostDashboard__content__cards--card--property-image"
                     />
                     <div className="hostDashboard__content__cards--card__carousel-controls">

@@ -24,6 +24,10 @@ app.use('/api/booking', bookingRouter);
 app.use('/api/availability', availabilityRouter);
 // app.use('/api/review', spaceRouter);
 
+// Serve uploaded files so URLs like `/uploads/spaceImages/<file>` are accessible
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// keep specific route for propertyImages for backwards compatibility
 app.use('/uploads/propertyImages', express.static(path.join(__dirname, 'uploads/propertyImages')));
 
 const PORT=process.env.PORT || 3001; 
