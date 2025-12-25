@@ -91,8 +91,8 @@ const LandingPage = () => {
             <Link to="/about" className="landing-page__header__right--links--link">About</Link>
             {sessionStorage.getItem('isLogin')?
             <Link to="/login" className="landing-page__header__right--links--link">Logout</Link>
-            :<Link to="/login" className="landing-page__header__right--links--link">Login</Link>}
-            <Link to="/register" className="landing-page__header__right--links--link">SignUp</Link>
+            :(<><Link to="/login" className="landing-page__header__right--links--link">Login</Link>
+            <Link to="/register" className="landing-page__header__right--links--link">SignUp</Link></>)}
           </div>
         </div>
       </header>
@@ -132,7 +132,7 @@ const LandingPage = () => {
         <div className="landing-page__card-section__container">
           <div className="landing-page__card-section__container--header">
             <h2>Featured Spaces</h2>
-            <Link to="/listings" className="landing-page__card-section__container--header--view-all">View All →</Link>
+            <Link to="/places" className="landing-page__card-section__container--header--view-all">View All →</Link>
           </div>
           <div className="landing-page__card-section__container__cards">
             {propertyData && propertyData.map((property) => (
