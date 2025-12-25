@@ -85,6 +85,26 @@ const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
     }
   };
 
+  const handleFileChange = (e) => {
+    // setNewImages(e.target.files)
+    const files = Array.from(e.target.files);
+    const previewFiles = files.map((file)=>({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
+    setNewImages((prev)=> [...prev, ...previewFiles]);
+  }
+
+    
+
+  const removeExistingImage = (index)=> {
+    setExistingImages((prev)=> prev.filter((_,i) => i !== index))
+  }
+
+  const removeNewImage = (index) => {
+    setNewImages((prev) => prev.filter((_, i) => i !== index))
+  }
+  
   const handleClear = () => setForm(initialState);
 
   const handleSubmit = (e) => {
@@ -94,29 +114,13 @@ const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
       images: newImages.map((img)=>img.file),
       existingImages
     };
+    debugger;
     console.log(finalFormData)
     propertyData ?  onSave(finalFormData, 'updata') : onSave(finalFormData, 'save')
   };
 
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    const previewFiles = files.map((file)=>({
-      file,
-      preview: URL.createObjectURL(file)
-    }));
-    setNewImages((prev)=> [...prev, ...previewFiles]);
-  }
-
-  const removeExistingImage = (index)=> {
-    setExistingImages((prev)=> prev.filter((_,i) => i !== index))
-  }
-
-  const removeNewImage = (index) => {
-    setNewImages((prev) => prev.filter((_, i) => i !== index))
-  }
-
   return (
-    <form className="add-space-form" onSubmit={handleSubmit}>
+    <form className="add-space-form" onSubmit={handleSubmit} >
       <div className="add-space-form__row">
         <label className="add-space-form__label">
           Space Type:
