@@ -17,7 +17,6 @@ const AddSpaceDetails = () => {
   try {
     const response = await fetch(`http://localhost:5000/api/space/getSpaces/${propertyId}`);
     const data = await response.json();
-    debugger;
     // Support both shapes: older mongoose document (with _doc.spaces)
     // and plain object returned via .lean() (spaces.spaces).
     if (data.spaces) {
@@ -126,6 +125,7 @@ const AddSpaceDetails = () => {
   }
 
   function handleEdit(space){
+    console.log(space)
     setPropertyData(space);
     setShowModal(true);
   }
