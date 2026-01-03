@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./addSpaceDetailsForm.scss";
 
 const initialState = {
@@ -14,7 +14,7 @@ const initialState = {
     perMonth: "",
     perThreeMonths: "",
     perSixMonths: "",
-    perOneYear: ""
+    perOneYear: "",
   },
   discountPercentage: {
     perHour: "",
@@ -23,17 +23,23 @@ const initialState = {
     perMonth: "",
     perThreeMonths: "",
     perSixMonths: "",
-    perOneYear: ""
+    perOneYear: "",
   },
   description: "",
   availableDays: [],
   availableTimes: { start: "", end: "" },
   availability: [],
-  isActive: true
+  isActive: true,
 };
 
 const daysOfWeek = [
-  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ];
 
 const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
@@ -48,21 +54,21 @@ const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
         ...form,
         pricePerSeat: {
           ...form.pricePerSeat,
-          [name.split(".")[1]]: value
-        }
+          [name.split(".")[1]]: value,
+        },
       });
     } else if (name.startsWith("discountPercentage.")) {
       setForm({
         ...form,
         discountPercentage: {
           ...form.discountPercentage,
-          [name.split(".")[1]]: value
-        }
+          [name.split(".")[1]]: value,
+        },
       });
     } else if (name === "isActive") {
       setForm({ ...form, isActive: checked });
     } else if (name === "amenities") {
-      setForm({ ...form, amenities: value.split(",").map(a => a.trim()) });
+      setForm({ ...form, amenities: value.split(",").map((a) => a.trim()) });
     } else if (name === "availableDays") {
       const days = [...form.availableDays];
       if (checked) {
@@ -72,13 +78,16 @@ const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
         if (idx > -1) days.splice(idx, 1);
       }
       setForm({ ...form, availableDays: days });
-    } else if (name === "availableTimes.start" || name === "availableTimes.end") {
+    } else if (
+      name === "availableTimes.start" ||
+      name === "availableTimes.end"
+    ) {
       setForm({
         ...form,
         availableTimes: {
           ...form.availableTimes,
-          [name.split(".")[1]]: value
-        }
+          [name.split(".")[1]]: value,
+        },
       });
     } else {
       setForm({ ...form, [name]: value });
@@ -86,69 +95,116 @@ const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
   };
 
   const handleFileChange = (e) => {
-    // setNewImages(e.target.files)
     const files = Array.from(e.target.files);
-    const previewFiles = files.map((file)=>({
+    const previewFiles = files.map((file) => ({
       file,
-      preview: URL.createObjectURL(file)
+      preview: URL.createObjectURL(file),
     }));
-    setNewImages((prev)=> [...prev, ...previewFiles]);
-  }
+    setNewImages((prev) => [...prev, ...previewFiles]);
+  };
 
-    
-
-  const removeExistingImage = (index)=> {
-    setExistingImages((prev)=> prev.filter((_,i) => i !== index))
-  }
+  const removeExistingImage = (index) => {
+    console.log(index);
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const removeNewImage = (index) => {
-    setNewImages((prev) => prev.filter((_, i) => i !== index))
-  }
-  
+    setNewImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleClear = () => setForm(initialState);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const finalFormData = {
       ...form,
-      images: newImages.map((img)=>img.file),
-      existingImages
+      images: newImages.map((img) => img.file),
+      existingImages,
     };
-    debugger;
-    console.log(finalFormData)
-    propertyData ?  onSave(finalFormData, 'updata') : onSave(finalFormData, 'save')
+    console.log(finalFormData);
+    propertyData
+      ? onSave(finalFormData, "updata")
+      : onSave(finalFormData, "save");
   };
 
+  useEffect(() => {
+    if (propertyData) {
+      form.spaceType = propertyData.spaceType;
+      form.floor = propertyData.floor;
+      form.roomNumber = propertyData.roomNumber;
+      form.capacity = propertyData.capacity;
+      form.amenities = propertyData.amenities;
+      form.pricePerSeat = propertyData.pricePerSeat;
+      form.discountPercentage = propertyData.discountPercentage;
+      form.description = propertyData.description;
+      form.availableDays = propertyData.availableDays;
+      form.availableTimes = propertyData.availableTimes;
+      form.availability = propertyData.availability;
+      form.isActive = propertyData.isActive;
+      setForm({ ...form });
+      setExistingImages(propertyData.images || []);
+    }
+  }, []);
   return (
-    <form className="add-space-form" onSubmit={handleSubmit} >
+    <form className="add-space-form" onSubmit={handleSubmit}>
       <div className="add-space-form__row">
         <label className="add-space-form__label">
           Space Type:
-          <input className="add-space-form__input" name="spaceType" value={form.spaceType} onChange={handleChange} required />
+          <input
+            className="add-space-form__input"
+            name="spaceType"
+            value={form.spaceType}
+            onChange={handleChange}
+            required
+          />
         </label>
         <label className="add-space-form__label">
           Floor:
-          <input className="add-space-form__input" name="floor" value={form.floor} onChange={handleChange} required />
+          <input
+            className="add-space-form__input"
+            name="floor"
+            value={form.floor}
+            onChange={handleChange}
+            required
+          />
         </label>
         <label className="add-space-form__label">
           Room Number:
-          <input className="add-space-form__input" name="roomNumber" value={form.roomNumber} onChange={handleChange} required />
+          <input
+            className="add-space-form__input"
+            name="roomNumber"
+            value={form.roomNumber}
+            onChange={handleChange}
+            required
+          />
         </label>
         <label className="add-space-form__label">
           Capacity:
-          <input className="add-space-form__input" name="capacity" type="number" value={form.capacity} onChange={handleChange} required />
+          <input
+            className="add-space-form__input"
+            name="capacity"
+            type="number"
+            value={form.capacity}
+            onChange={handleChange}
+            required
+          />
         </label>
       </div>
       <div className="add-space-form__row">
-        <label className="add-space-form__label" >
+        <label className="add-space-form__label">
           Amenities (comma separated):
-          <input className="add-space-form__input" name="amenities" value={form.amenities.join(", ")} onChange={handleChange} />
+          <input
+            className="add-space-form__input"
+            name="amenities"
+            value={form.amenities.join(", ")}
+            onChange={handleChange}
+          />
         </label>
       </div>
       <fieldset className="add-space-form__fieldset">
         <legend className="add-space-form__legend">Price Per Seat</legend>
         <div className="add-space-form__row">
-          {Object.keys(form.pricePerSeat).map(key => (
+          {Object.keys(form.pricePerSeat).map((key) => (
             <label className="add-space-form__label" key={key}>
               {key}:
               <input
@@ -165,7 +221,7 @@ const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
       <fieldset className="add-space-form__fieldset">
         <legend className="add-space-form__legend">Discount Percentage</legend>
         <div className="add-space-form__row">
-          {Object.keys(form.discountPercentage).map(key => (
+          {Object.keys(form.discountPercentage).map((key) => (
             <label className="add-space-form__label" key={key}>
               {key}:
               <input
@@ -181,12 +237,18 @@ const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
       </fieldset>
       <label className="add-space-form__label">
         Description:
-        <textarea className="add-space-form__textarea" name="description" value={form.description} onChange={handleChange} required />
+        <textarea
+          className="add-space-form__textarea"
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          required
+        />
       </label>
       <fieldset className="add-space-form__fieldset">
         <legend className="add-space-form__legend">Available Days</legend>
         <div className="add-space-form__row">
-          {daysOfWeek.map(day => (
+          {daysOfWeek.map((day) => (
             <label className="add-space-form__checkbox-label" key={day}>
               <input
                 className="add-space-form__checkbox"
@@ -222,7 +284,10 @@ const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
             onChange={handleChange}
           />
         </label>
-        <label className="add-space-form__label" style={{alignItems: "center", flexDirection: "row", gap: "0.5rem"}}>
+        <label
+          className="add-space-form__label"
+          style={{ alignItems: "center", flexDirection: "row", gap: "0.5rem" }}
+        >
           Is Active:
           <input
             className="add-space-form__checkbox"
@@ -233,36 +298,82 @@ const AddSpaceDetailsForm = ({ onClose, onSave, propertyData }) => {
           />
         </label>
       </div>
-      <label className="add-space-form__label">
-        Images:
-        <input className="add-space-form__images" name="images" type="file" accept="image/*" multiple onChange={handleFileChange} required />
-      </label>
-      <label className="add-space-form__label">
-        Existing Images:
-        <div>
+      <div className="property-form__row">
+        <label className="property-form__label">
+          Images:
+          <input
+            className="property-form__input"
+            name="images"
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+          />
+        </label>
+      </div>
+      <div className="property-form__preview">
+        <h4>Existing Images</h4>
+        <div className="property-form__preview__container">
           {existingImages.map((img, index) => (
-          <div key={index} className="property-form__preview__container--image-wrapper">
-            <img src={`http://localhost:5000/${img.path}`} alt="Existing"  className="property-form__preview__container--image-wrapper__prev-img"/>
-            <button type="button" onClick={() => removeExistingImage(index)} className="property-form__preview__container--image-wrapper__remove-btn">x</button>
-          </div>
-        ))}
-        </div>
-      </label>
-      <label className="add-space-form__label">
-        Newly Added Images:
-        <div>
-          {newImages.map((img, index) => (
-            <div>
-              <img src={img.preview} alt="New Upload" />
-              <button type="button" onClick={()=>removeNewImage(index)}>X</button>
+            <div
+              key={index}
+              className="property-form__preview__container--image-wrapper"
+            >
+              <img
+                src={`http://localhost:5000/${img.path}`}
+                alt="Existing"
+                className="property-form__preview__container--image-wrapper__prev-img"
+              />
+              <button
+                type="button"
+                onClick={() => removeExistingImage(index)}
+                className="property-form__preview__container--image-wrapper__remove-btn"
+              >
+                x
+              </button>
             </div>
-          ))
-          }
+          ))}
         </div>
-      </label>
+      </div>
+      <div className="property-form__preview">
+        <h4>New Images</h4>
+        <div className="property-form__preview__container">
+          {newImages.map((img, index) => (
+            <div
+              key={index}
+              className="property-form__preview__container--image-wrapper"
+            >
+              <img
+                src={img.preview}
+                alt="New Upload"
+                className="property-form__preview__container--image-wrapper__prev-img"
+              />
+              <button
+                type="button"
+                onClick={() => removeNewImage(index)}
+                className="property-form__preview__container--image-wrapper__remove-btn"
+              >
+                x
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
       <div style={{ marginTop: "1rem" }}>
-        <button className="add-space-form__button add-space-form__button--clear" type="button" onClick={handleClear}>Clear</button>
-        <button className="add-space-form__button add-space-form__button--save" type="submit" style={{ marginLeft: "1rem" }}>Save</button>
+        <button
+          className="add-space-form__button add-space-form__button--clear"
+          type="button"
+          onClick={handleClear}
+        >
+          Clear
+        </button>
+        <button
+          className="add-space-form__button add-space-form__button--save"
+          type="submit"
+          style={{ marginLeft: "1rem" }}
+        >
+          Save
+        </button>
       </div>
     </form>
   );

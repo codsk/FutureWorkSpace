@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LandingPage.scss';
 
 const LandingPage = () => {
@@ -7,6 +7,8 @@ const LandingPage = () => {
   const [selectedCity, setSelectedCity] = useState('');
   const [propertyData, setPropertyData] = useState([]);
   const [carouselIndices, setCarouselIndices] = useState({});
+
+  const navigate = useNavigate();
 
   const handleCityClick = (city) => {
     setSelectedCity(city);
@@ -71,6 +73,8 @@ const LandingPage = () => {
 
     return () => clearInterval(interval);
   }, [propertyData]);
+
+  
 
   return (
     <div className="landing-page">
@@ -170,7 +174,7 @@ const LandingPage = () => {
                   <h5 className="landing-page__card-section__container__cards--card--info--name">{property.name}</h5>
                   <p className="landing-page__card-section__container__cards--card--info--para">{property.address.street}, {property.address.city}</p>
                   <p className="landing-page__card-section__container__cards--card--info--para">Rating: {property.rating}</p>
-                  <button className="landing-page__card-section__container__cards--card--info--button">View Details</button>
+                  <button className="landing-page__card-section__container__cards--card--info--button" onClick={()=> navigate('/space')}>View Details</button>
                 </div>
               </div>
             ))}

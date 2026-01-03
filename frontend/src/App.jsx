@@ -8,6 +8,7 @@ import HostDashboard from './pages/hostComponents/hostDashboard';
 import AddPropertyDetailsForm from './pages/hostComponents/addPropertyDetailsForm';
 import AddSpaceDetails from './pages/hostComponents/addSpaceDetails';
 import AddSpaceDetailsForm from './pages/hostComponents/addSpaceDetailsForm';
+import Spaces from './pages/components/spaces';
 
 
 // This i need to handle (the user is still logged in or not)
@@ -30,6 +31,7 @@ function App() {
           </Suspense>} />
         <Route path='/addSpaceDetails' element={<AddSpaceDetails />} />
         <Route path='/addSpaceDetailsForm' element={<AddSpaceDetailsForm />} />
+        <Route path='/space' element={<Spaces />} />
       </Routes>
       </Router>
     </div>
